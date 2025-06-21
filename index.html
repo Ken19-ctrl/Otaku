@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Premium Anime Match</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  body {
+    background: linear-gradient(135deg, #000000, #1a1a1a);
+    color: #FFF8DC;
+    font-family: 'Poppins', sans-serif;
+    margin: 0; padding: 2rem;
+  }
+  h1 {
+    text-align: center;
+    font-weight: 800;
+    font-size: 3rem;
+    color: #FFD700;
+    text-shadow: 0 0 12px #FFD700;
+    margin-bottom: 2rem;
+  }
+  form {
+    max-width: 480px;
+    margin: 0 auto 2rem;
+    background: rgba(255 215 0 / 0.1);
+    border-radius: 15px;
+    padding: 1.8rem;
+    box-shadow: 0 0 20px #FFD700aa;
+    border: 2px solid #FFD700;
+  }
+  label {
+    display: block;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  input, select, textarea {
+    width: 100%;
+    background: #222;
+    border: 2px solid #555;
+    border-radius: 10px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    color: #FFD700;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #FFD700;
+    box-shadow: 0 0 8px #FFD700;
+    outline: none;
+  }
+  select[multiple] { height: 8rem; }
+  button {
+    width: 100%;
+    background: linear-gradient(90deg, #FFD700, #FFC107);
+    border: none;
+    border-radius: 12px;
+    padding: 1rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #000;
+    box-shadow: 0 0 15px #FFD700aa;
+    background-size: 200% 100%;
+    background-position: left;
+    transition: background-position 0.5s ease;
+  }
+  button:hover { background-position: right; }
+  #result {
+    max-width: 480px;
+    margin: 1rem auto;
+    padding: 1.5rem;
+    background: rgba(255 255 255 / 0.05);
+    border-radius: 15px;
+    border: 2px solid #FFD700;
+    box-shadow: 0 0 15px #FFD700aa;
+    color: #FFF8DC;
+    animation: fadeIn 0.7s ease forwards;
+    font-size: 1.1rem;
+  }
+  #result h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px #FFD700;
+  }
+  #result p { margin: 0.3rem 0; }
+  #resetBtn {
+    max-width: 480px;
+    display: block;
+    margin: 1rem auto;
+    padding: 1rem;
+    background: #222;
+    color: #FFD700;
+    border-radius: 12px;
+    border: 2px solid #FFD700;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 0 10px #FFD700aa;
+  }
+  #resetBtn:hover {
+    background: #FFD700;
+    color: #000;
+  }
+  .hidden { display: none; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+<h1>Premium Anime Match</h1>
+<form id="animeForm">
+  <label>Prénom
+    <input id="prenom" required autocomplete="off" />
+  </label>
+  <label>Préférence d’anime
+    <select id="preference" required>
+      <option value="sci-fi">Science-fiction</option>
+      <option value="fantasy">Fantaisie</option>
+      <option value="action">Action</option>
+      <option value="romance">Romance</option>
+    </select>
+  </label>
+  <label>Traits de personnalité (choix multiple)
+    <select id="traits" multiple required>
+      <option value="intelligent">Intelligent</option>
+      <option value="mystérieux">Mystérieux</option>
+      <option value="courageux">Courageux</option>
+      <option value="drôle">Drôle</option>
+      <option value="calme">Calme</option>
+      <option value="énergique">Énergique</option>
+      <option value="déterminé">Déterminé</option>
+    </select>
+  </label>
+  <label>Genre
+    <select id="genre" required>
+      <option value="">--Choisir--</option>
+      <option value="Homme">Homme</option>
+      <option value="Femme">Femme</option>
+      <option value="Autre">Autre</option>
+    </select>
+  </label>
+  <button type="submit">C'est parti</button>
+</form>
+<div id="result" class="hidden"></div>
+<button id="resetBtn" class="hidden">Recommencer</button>
+
+<script>
+  const charactersDB = [ 
+    { preference:"action", traits:["courageux","déterminé","calme"], character:"Son Goku", anime:"Dragon Ball Z", description:"Cheveux noirs hérissés, sourire confiant" },
+    { preference:"action", traits:["énergique","drôle","déterminé"], character:"Monkey D. Luffy", anime:"One Piece", description:"Chapeau de paille, grand sourire" },
+    { preference:"action", traits:["courageux","calme","mystérieux"], character:"Levi Ackerman", anime:"Attack on Titan", description:"Cheveux noirs, regard froid" },
+    { preference:"action", traits:["déterminé","énergique","courageux"], character:"Naruto Uzumaki", anime:"Naruto", description:"Cheveux blonds hérissés, marques sur les joues" },
+    { preference:"sci-fi", traits:["intelligent","mystérieux","calme"], character:"L Lawliet", anime:"Death Note", description:"Yeux cernés, posture nonchalante" },
+    { preference:"sci-fi", traits:["calme","intelligent","mystérieux"], character:"Makise Kurisu", anime:"Steins;Gate", description:"Cheveux roux, regard réfléchi" },
+    { preference:"sci-fi", traits:["courageux","calme","déterminé"], character:"Spike Spiegel", anime:"Cowboy Bebop", description:"Cheveux verts, expression détendue" },
+    { preference:"sci-fi", traits:["intelligent","déterminé","mystérieux"], character:"Shinji Ikari", anime:"Neon Genesis Evangelion", description:"Cheveux bruns, air pensif" },
+    { preference:"fantasy", traits:["courageux","énergique","déterminé"], character:"Tanjiro Kamado", anime:"Demon Slayer", description:"Cheveux noirs aux pointes rouges, sourire doux" },
+    { preference:"fantasy", traits:["mystérieux","calme","déterminé"], character:"Gojo Satoru", anime:"Jujutsu Kaisen", description:"Cheveux blancs, bandeau sur les yeux" },
+    { preference:"fantasy", traits:["courageux","énergique","drôle"], character:"Zenitsu Agatsuma", anime:"Demon Slayer", description:"Cheveux jaunes, expression anxieuse" },
+    { preference:"fantasy", traits:["drôle","calme","courageux"], character:"Natsu Dragneel", anime:"Fairy Tail", description:"Cheveux roses, sourire espiègle" },
+    { preference:"romance", traits:["calme","mystérieux","intelligent"], character:"Hinata Hyuga", anime:"Naruto", description:"Cheveux noirs, regard timide" },
+    { preference:"romance", traits:["drôle","énergique","calme"], character:"Ochaco Uraraka", anime:"My Hero Academia", description:"Cheveux courts bruns, sourire doux" },
+    { preference:"romance", traits:["déterminé","calme","courageux"], character:"Eren Jaeger", anime:"Attack on Titan", description:"Cheveux bruns, yeux verts perçants" },
+    { preference:"romance", traits:["mystérieux","calme","déterminé"], character:"Sasuke Uchiha", anime:"Naruto", description:"Cheveux noirs, regard froid" },
+    { preference:"action", traits:["courageux","drôle","énergique"], character:"Eijiro Kirishima", anime:"My Hero Academia", description:"Cheveux rouges hérissés, sourire large" },
+    { preference:"sci-fi", traits:["mystérieux","calme","intelligent"], character:"Motoko Kusanagi", anime:"Ghost in the Shell", description:"Cheveux violets courts, regard intense" },
+    { preference:"sci-fi", traits:["calme","déterminé","intelligent"], character:"Rintarou Okabe", anime:"Steins;Gate", description:"Cheveux bruns décoiffés, air pensif" },
+    { preference:"fantasy", traits:["courageux","calme","déterminé"], character:"Inuyasha", anime:"Inuyasha", description:"Cheveux blancs longs, oreilles de chien" },
+    { preference:"fantasy", traits:["énergique","drôle","calme"], character:"Raphtalia", anime:"Shield Hero", description:"Oreilles de tanuki, sourire doux" },
+    { preference:"fantasy", traits:["calme","mystérieux","déterminé"], character:"Alucard", anime:"Hellsing", description:"Chapeau rouge, sourire inquiétant" },
+    { preference:"action", traits:["courageux","drôle","déterminé"], character:"Edward Elric", anime:"Fullmetal Alchemist", description:"Cheveux blonds en tresse, regard espiègle" },
+    { preference:"action", traits:["courageux","calme","déterminé"], character:"Izuku Midoriya", anime:"My Hero Academia", description:"Cheveux verts, regard déterminé" },
+    { preference:"action", traits:["calme","mystérieux","déterminé"], character:"Jotaro Kujo", anime:"JoJo's Bizarre Adventure", description:"Casquette noire, expression stoïque" },
+    { preference:"sci-fi", traits:["mystérieux","calme","énergique"], character:"Shiro Emiya", anime:"Fate/stay night", description:"Cheveux blancs, regard tranquille" },
+    { preference:"sci-fi", traits:["intelligent","déterminé","calme"], character:"Hei", anime:"Darker than Black", description:"Cheveux noirs, masque blanc" },
+    { preference:"fantasy", traits:["courageux","calme","mystérieux"], character:"Emilia", anime:"Re:Zero", description:"Cheveux argentés, expression douce" },
+    { preference:"fantasy", traits:["énergique","drôle","courageux"], character:"Lina Inverse", anime:"Slayers", description:"Cheveux roux, sourire espiègle" },
+    { preference:"fantasy", traits:["calme","déterminé","courageux"], character:"Meliodas", anime:"Seven Deadly Sins", description:"Cheveux blonds, sourire malicieux" },
+    { preference:"romance", traits:["calme","drôle","mystérieux"], character:"Mai Sakurajima", anime:"Bunny Girl Senpai", description:"Cheveux noirs, regard doux" },
+    { preference:"romance", traits:["mystérieux","calme","déterminé"], character:"Sawako Kuronuma", anime:"Kimi ni Todoke", description:"Cheveux noirs, sourire timide" },
+    { preference:"romance", traits:["calme","courageux","drôle"], character:"Taiga Aisaka", anime:"Toradora!", description:"Petite taille, cheveux bruns longs" },
+    { preference:"romance", traits:["mystérieux","calme","énergique"], character:"Kaguya Shinomiya", anime:"Kaguya-sama", description:"Cheveux noirs, expression réservée" },
+    { preference:"action", traits:["courageux","calme","drôle"], character:"Saitama", anime:"One Punch Man", description:"Tête chauve, regard apathique" },
+    { preference:"sci-fi", traits:["déterminé","intelligent","mystérieux"], character:"Rika Furude", anime:"Higurashi", description:"Cheveux bleus, air enfantin" },
+    { preference:"fantasy", traits:["énergique","drôle","courageux"], character:"Yuno Gasai", anime:"Future Diary", description:"Cheveux roses, regard intense" },
+    { preference:"romance", traits:["mystérieux","calme","déterminé"], character:"Rem", anime:"Re:Zero", description:"Cheveux bleus courts, air réservé" },
+    { preference:"romance", traits:["calme","courageux","drôle"], character:"Zero Two", anime:"Darling in the Franxx", description:"Cheveux roses, cornes rouges" },
+    { preference:"sci-fi", traits:["courageux","mystérieux","déterminé"], character:"Simon", anime:"Gurren Lagann", description:"Lunettes sur le front, regard déterminé" },
+    { preference:"action", traits:["courageux","drôle","énergique"], character:"Kenshiro", anime:"Fist of the North Star", description:"Corps musclé, regard sévère" },
+    { preference:"fantasy", traits:["courageux","calme","mystérieux"], character:"Ash Ketchum", anime:"Pokémon", description:"Casquette rouge, sourire amical" },
+    { preference:"sci-fi", traits:["mystérieux","intelligent","calme"], character:"Asuka Langley", anime:"Neon Genesis Evangelion", description:"Cheveux roux, regard fier" },
+    { preference:"action", traits:["courageux","calme","déterminé"], character:"Ichigo Kurosaki", anime:"Bleach", description:"Cheveux orange, expression sérieuse" },
+    { preference:"action", traits:["courageux","drôle","énergique"], character:"Gon Freecss", anime:"Hunter x Hunter", description:"Cheveux noirs hérissés, sourire franc" },
+    { preference:"fantasy", traits:["intelligent","mystérieux","calme"], character:"Kirito", anime:"Sword Art Online", description:"Cheveux noirs, regard perçant" },
+    { preference:"action", traits:["calme","déterminé","mystérieux"], character:"Kakashi Hatake", anime:"Naruto", description:"Masque sur le visage, cheveux gris" },
+    { preference:"sci-fi", traits:["intelligent","calme","déterminé"], character:"Light Yagami", anime:"Death Note", description:"Cheveux châtains, regard intense" },
+    { preference:"fantasy", traits:["drôle","courageux","énergique"], character:"Meliodas", anime:"Seven Deadly Sins", description:"Cheveux blonds, sourire espiègle" },
+    { preference:"romance", traits:["calme","intelligent","mystérieux"], character:"Kaori Miyazono", anime:"Your Lie in April", description:"Cheveux blonds, regard joyeux" }
+  ];
+
+  const form = document.getElementById('animeForm');
+  const resultDiv = document.getElementById('result');
+  const resetBtn = document.getElementById('resetBtn');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const prenom = document.getElementById('prenom').value.trim();
+    const preference = document.getElementById('preference').value;
+    const genre = document.getElementById('genre').value;
+    const traitsSelected = Array.from(document.getElementById('traits').selectedOptions).map(opt => opt.value);
+
+    let candidates = charactersDB.filter(c => c.preference === preference);
+    candidates = candidates.filter(char => char.traits.filter(t => traitsSelected.includes(t)).length >= 2);
+
+    if (candidates.length === 0) {
+      resultDiv.innerHTML = '<h2>Aucun personnage ne correspond aux traits choisis.</h2>';
+    } else {
+      const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+      resultDiv.innerHTML = `
+        <h2>${prenom} (${genre})</h2>
+        <p><strong>Votre personnage :</strong> ${chosen.character}</p>
+        <p><strong>Anime :</strong> ${chosen.anime}</p>
+        <p><em>Traits :</em> ${chosen.traits.join(', ')}</p>
+        <p><em>Indice sur le visage :</em> ${chosen.description}</p>
+      `;
+    }
+    resultDiv.classList.remove('hidden');
+    resetBtn.classList.remove('hidden');
+    form.classList.add('hidden');
+  });
+
+  resetBtn.addEventListener('click', () => {
+    resultDiv.classList.add('hidden');
+    resetBtn.classList.add('hidden');
+    form.classList.remove('hidden');
+    form.reset();
+  });
+</script>
+</body>
+</html>
