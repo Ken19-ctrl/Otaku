@@ -215,7 +215,7 @@
     const traitsSelected = Array.from(document.getElementById('traits').selectedOptions).map(opt => opt.value);
 
     let candidates = charactersDB.filter(c => c.preference === preference);
-    candidates = candidates.filter(char => char.traits.filter(t => traitsSelected.includes(t)).length >= 2);
+    candidates = candidates.filter(char => char.traits.filter(t => traitsSelected.includes(t)).length >= 1);
 
     if (candidates.length === 0) {
       resultDiv.innerHTML = '<h2>Aucun personnage ne correspond aux traits choisis.</h2>';
